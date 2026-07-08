@@ -38,4 +38,32 @@ test.describe('TMDB API (direct)', () => {
         expect(first.title || first.name).toBeTruthy(); // title (movie) / name (tv) — DEF-12
     });
 
+    // TC-12: The discover endpoint filtered by genre returns only that genre.
+    test('discover with genre filter returns only that genre', async ({ page }) => {
+
+        // Verifies genre filtering at the API level (with_genres uses TMDB genre IDs;
+        // Adventure = 12). Also localizes DEF-07 (genre filter shows wrong results):
+        // if the API returns only genre-12 movies, the defect is a UI rendering issue,
+        // not an API one.
+        await page.goto('/');
+
+        const ADVENTURE_ID = 12; // TMDB genre id for "Adventure"
+
+        const result = await page.evaluate(async ({ base, key, genre }) => {
+            const url = `${base}/discover/movie?with_genres=${genre}&page=1&api_key=${key}`;
+            const res = await fetch(url);
+            return { status: res.status, body: await res.json() };
+        }, { base: TMDB_BASE, key: API_KEY, genre: ADVENTURE_ID });
+
+        expect(result.status).toBe(200);
+
+        const results = result.body.results;
+        expect(results.length).toBeGreaterThan(0);
+
+        // Every returned movie must include the Adventure genre id.
+        for (const movie of results) {
+            expect(movie.genre_ids).toContain(ADVENTURE_ID);
+        }
+    });
+
 });
