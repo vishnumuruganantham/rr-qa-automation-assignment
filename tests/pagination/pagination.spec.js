@@ -30,3 +30,27 @@ test.describe('Pagination (UI)', () => {
     });
 
 });
+
+test.describe('Pagination — known defect (UI)', () => {
+
+    // TC-09: The last page should load results, but currently fails (known defect).
+    test('last page should load results (known defect: it does not)', async ({ page }) => {
+
+        // Marked test.fail(): we assert the CORRECT behavior (results load on the last
+        // page). The known defect makes this assertion fail, so Playwright reports the
+        // test as passing (expected failure). If the app is ever fixed, this test will
+        // start genuinely passing — turning red under test.fail() — alerting us the
+        // defect is resolved. See docs/defects.md 
+        test.fail();
+
+        await page.goto('/');
+
+        // Navigate to the last page.
+        await page.getByRole('button', { name: 'Page 57863', exact: true }).click();
+
+        // Expected correct behavior: the last page shows result cards.
+        // (Currently fails — the app renders an error state instead.)
+        await expect(page.locator('[class*="grid-cols-3"] > *').first()).toBeVisible();
+    });
+
+});
