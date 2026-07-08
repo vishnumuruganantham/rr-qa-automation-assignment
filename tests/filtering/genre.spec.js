@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { logger } from '../../src/utils/logger';
 
 const movieGenres = [
     'Action', 'Adventure', 'Animation', 'Comedy', 'Crime', 'Documentary',
@@ -25,24 +26,37 @@ test.describe('Genre filter (UI)', () => {
 
     // TC-04: Genre list matches the selected content type.
     test('Movie type shows the correct genre set', async ({ page }) => {
+        logger.info('Starting genre set test for Type = Movie');
+
         await page.goto('/');            // starts on Movie by default
+        logger.info('Navigated to home page (Type defaults to Movie)');
+
         const options = await readGenreOptions(page);
+        logger.info(`Read ${options.length} genre options for Movie`);
+
         expect(options.sort()).toEqual([...movieGenres].sort());
         expect(options).not.toContain('Soap');
+        logger.info('Verified Movie genre set matches expected (Soap absent)');
     });
 
     test('TV Shows type shows the correct genre set', async ({ page }) => {
+        logger.info('Starting genre set test for Type = TV Shows');
+
         await page.goto('/');
+        logger.info('Navigated to home page');
+
         // Switch Type to TV Shows first.
         const typeControl = page.locator('//p[text()="Type"]/following-sibling::div[1]');
         await typeControl.click();
         await page.getByText('TV Shows', { exact: true }).click();
+        logger.info('Switched Type to TV Shows');
 
         const options = await readGenreOptions(page);
+        logger.info(`Read ${options.length} genre options for TV Shows`);
 
         expect(options.sort()).toEqual([...tvGenres].sort());
         expect(options).toContain('Soap');
-
+        logger.info('Verified TV Shows genre set matches expected (Soap present)');
     });
 
 });
