@@ -46,11 +46,15 @@ test.describe('Pagination — known defect (UI)', () => {
         await page.goto('/');
 
         // Navigate to the last page.
-        await page.getByRole('button', { name: 'Page 57863', exact: true }).click();
+        // Click the last available page button (the exact number is volatile and
+        // differs across environments, so select it dynamically).
+        const pageButtons = page.getByRole('button', { name: /^Page \d+$/ });
+        await pageButtons.last().click();
 
         // Expected correct behavior: the last page shows result cards.
         // (Currently fails — the app renders an error state instead.)
-        await expect(page.locator('[class*="grid-cols-3"] > *').first()).toBeVisible();
+        await expect(page.locator('[class*="grid-cols-3"] > *').first())
+            .toBeVisible({ timeout: 5000 });
     });
 
 });
