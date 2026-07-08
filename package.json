@@ -1,15 +1,25 @@
 {
-  "name": "assignment",
+  "name": "rr-qa-automation-assignment",
   "version": "1.0.0",
-  "description": "��#\u0000 \u0000r\u0000r\u0000-\u0000q\u0000a\u0000-\u0000a\u0000u\u0000t\u0000o\u0000m\u0000a\u0000t\u0000i\u0000o\u0000n\u0000-\u0000a\u0000s\u0000s\u0000i\u0000g\u0000n\u0000m\u0000e\u0000n\u0000t\u0000\r\u0000 \u0000",
+  "description": "UI and API test automation for the TMDB Discover demo site, built with Playwright.",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "report": "playwright show-report"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vishnumuruganantham/rr-qa-automation-assignment.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "playwright",
+    "qa",
+    "automation",
+    "testing",
+    "api-testing"
+  ],
+  "author": "Vishnu Muruganantham",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
